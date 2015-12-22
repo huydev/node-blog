@@ -1,0 +1,18 @@
+{
+  "name": "huyblog",
+  "version": "1.0.0",
+  "description": "",
+  "author": "虐猫狂人薛定谔",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.14.1",
+    "cookie-parser": "^1.4.0",
+    "ejs": "^2.3.4",
+    "express-session": "^1.12.1",
+    "moment": "^2.10.6",
+    "mongoose": "^4.3.0",
+    "morgan": "^1.6.1",
+    "multer": "^1.1.0",
+    "serve-favicon": "^2.3.0"
+  }
+}
