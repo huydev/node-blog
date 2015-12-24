@@ -77,19 +77,20 @@
       <main class="mdl-layout__content mdl-color--grey-100">
         <div class="mdl-grid demo-content">
           <div class="demo-charts mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-grid">
-            <form action="#" id="newform">
+            <form id="newform">
               <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                 <input class="mdl-textfield__input" type="text" id="title">
                 <label class="mdl-textfield__label" for="title">标题</label>
               </div>
               <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                 <input class="mdl-textfield__input" type="text" id="tags">
-                <label class="mdl-textfield__label" for="tags">标签</label>
+                <label class="mdl-textfield__label" for="tags">标签(使用 ; 分隔)</label>
               </div>
               <div class="content-form">
                 <label for="content">内容</label>
                 <textarea type="text" rows= "3" id="content" ></textarea>
               </div>
+              <p id="result" class="mdl-color-text--grey"></p>
               <div>
                 <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">完成</button>
                 <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">预览</button>
@@ -101,9 +102,57 @@
       </main>
     </div>
     <script src="/js/material.min.js"></script>
+    <script src="http://cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
     <script>
       var editor = new Editor();
       editor.render();
+
+      $(function(){
+        $('#newform').on('submit', function(){
+          $(this).find('input:submit').prop('disabled', true);
+          var _this = this;
+
+          var title = $('#title').val();
+          var tags = $('#tags').val().split(';');
+          var content = editor.codemirror.getValue();
+
+          if($.trim(title) == ''){
+            alert('标题不能为空');
+            return;
+          }
+          if(tags.length == 0){
+            alert('标签不能为空');
+            return;
+          }
+          if($.trim(content) == ''){
+            alert('内容不能为空');
+            return;
+          }
+
+          var data = {
+            title: title,
+            tags: tags,
+            content: content
+          }
+          $.ajax({
+            url: '/ht/addarticle',
+            method: 'POST',
+            data: data,
+            dataType: 'json',
+            success: function(data){
+              $(_this).find('input:submit').prop('disabled', true);
+
+              if(data.status == 1){
+                _this.reset();
+                editor.codemirror.setValue('');
+                $('#result').text(data.msg);
+              }
+            }
+          });
+
+          return false;
+        });
+      });
     </script>
   </body>
 </html>

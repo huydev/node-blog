@@ -1,7 +1,8 @@
 var express = require('express');
 var router = express.Router();
-
 var fs = require('fs');
+
+var Article = require('../entity/Article');
 
 var multer = require('multer');  //文件上传
 var upload = multer({
@@ -18,6 +19,28 @@ router.get('/index', function(req, res){
 });
 router.get('/newarticle', function(req, res){
   res.render('back_newarticle.html');
+});
+
+//新建文章
+router.post('/addarticle', function(req, res){
+  Article.create({
+    title: req.body.title,
+    tags: req.body.tags,
+    content: req.body.content,
+    createTime: new Date()
+  }, function(err, article){
+    if(err){
+      res.json({
+        status: 0,
+        msg: err + ''
+      });
+    }else{
+      res.json({
+        status: 1,
+        msg: '保存成功'
+      });
+    }
+  });
 });
 
 
