@@ -37,6 +37,11 @@ ArticleSchema.virtual('formatTime').get(function(){
   return time;
 });
 
+ArticleSchema.virtual('formatTags').get(function(){
+  var newTags = this.tags.join(';');
+  return newTags;
+});
+
 var Article = mongoose.model('Article', ArticleSchema);
 
 module.exports = Article;

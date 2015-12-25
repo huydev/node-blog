@@ -44,11 +44,19 @@
           <div class="demo-charts mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-grid">
             <form id="newform">
               <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                <input class="mdl-textfield__input" type="text" id="title">
+                <% if(optcode == 1){ %>
+                  <input class="mdl-textfield__input" type="text" id="title" value="<%= article.title %>" disabled>
+                <% }else if(optcode == 2){ %>
+                  <input class="mdl-textfield__input" type="text" id="title" value="<%= article.title %>" readonly>
+                <% } %>
                 <label class="mdl-textfield__label" for="title">标题</label>
               </div>
               <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                <input class="mdl-textfield__input" type="text" id="tags">
+                <% if(optcode == 1){ %>
+                  <input class="mdl-textfield__input" type="text" id="tags" value="<%= article.formatTags %>" disabled>
+                <% }else if(optcode == 2){ %>
+                  <input class="mdl-textfield__input" type="text" id="tags" value="<%= article.tags %>" readonly>
+                <% } %>
                 <label class="mdl-textfield__label" for="tags">标签(使用 ; 分隔)</label>
               </div>
               <div class="content-form">
@@ -57,7 +65,9 @@
               </div>
               <p id="result" class="mdl-color-text--grey"></p>
               <div>
-                <button type="submit" id="submitbtn" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">完成</button>
+                <% if(optcode != 1){ %>
+                  <button type="submit" id="submitbtn" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">更新</button>
+                <% } %>
               </div>
             </form>
             <form id="virtualForm" enctype="multipart/form-data"></form>
@@ -71,45 +81,54 @@
       var editor = new Editor();
       editor.render();
 
+      var optcode = '<%= optcode %>';
+      var content = '<%= article.content %>';
+
+      editor.codemirror.setValue(unescape(content));
+      editor.toolbar.preview.click();
+
+      function getId(){
+        return location.pathname.replace('/ht/','');
+      }
+
       $(function(){
+        var oldValue = editor.codemirror.getValue();
+
         $('#newform').on('submit', function(){
           $('#submitbtn').prop('disabled', true);
           var _this = this;
 
-          var title = $('#title').val();
-          var tags = $('#tags').val().split(';');
-          var content = escape(editor.codemirror.getValue());
+          var content = editor.codemirror.getValue();
 
-          if($.trim(title) == ''){
-            alert('标题不能为空');
-            return false;
-          }
-          if(tags.length == 0){
-            alert('标签不能为空');
-            return false;
-          }
           if($.trim(content) == ''){
+            $('#submitbtn').prop('disabled', false);
             alert('内容不能为空');
             return false;
           }
 
+          if($.trim(content) == oldValue){
+            $('#submitbtn').prop('disabled', false);
+            alert('没有修改内容');
+            return false;
+          }
+
           var data = {
-            title: title,
-            tags: tags,
+            id: getId(),
             content: content
           }
           $.ajax({
-            url: '/ht/addarticle',
+            url: '/ht/editarticle',
             method: 'POST',
             data: data,
             dataType: 'json',
             success: function(data){
-              $('#submitbtn').prop('disabled', false);
-
               if(data.status == 1){
                 _this.reset();
                 editor.codemirror.setValue('');
                 $('#result').text(data.msg);
+                setTimeout(function(){
+                  location.href = '/ht/index';
+                }, 3000);
               }
             }
           });
