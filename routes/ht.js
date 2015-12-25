@@ -14,9 +14,26 @@ var upload = multer({
 router.get('/', function(req, res){
   res.render('back_login.html');
 });
+
+//文章管理&主页设置
 router.get('/index', function(req, res){
-  res.render('back_index.html');
+  Article.find({}).sort({ createTime: -1 })
+    .limit(10).skip(0)
+    .exec(function(err, articles){
+      console.log(articles);
+      Article.getCount(function(err, count){
+        res.render('back_index.html', {
+          articles: articles,
+          total: count
+        });
+      });
+      /*res.render('back_index.html', {
+        articles: articles,
+        total: Article.getCount()
+      });*/
+    });
 });
+
 router.get('/newarticle', function(req, res){
   res.render('back_newarticle.html');
 });
@@ -42,6 +59,7 @@ router.post('/addarticle', function(req, res){
     }
   });
 });
+
 
 
 //上传操作

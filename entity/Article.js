@@ -20,8 +20,17 @@ var ArticleSchema = mongoose.Schema({
   tags: [String],
   content: String,
   comments: [CommentSchema],
+  views: {type: Number, default: 0},
   createTime: Date
 }, { collection: 'articles' });
+
+//数量
+ArticleSchema.statics.getCount = function(cb){
+  this.find({}).count(function(err, count){
+    if(err) return cb(err);
+    return cb(null, count);
+  });
+}
 
 ArticleSchema.virtual('formatTime').get(function(){
   var time = moment(this.createTime).format("YYYY-MM-DD");

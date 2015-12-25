@@ -115,6 +115,33 @@ html, body {
 .demo-content .content-form label{
   color: rgba(0,0,0,.26);
 }
+.demo-content .mdl-data-table{
+  width: 100%;
+  white-space: normal;
+}
+.demo-content .mdl-data-table th.w1{
+  width: 50%;
+}
+.demo-content .mdl-data-table th.w2{
+  width: 20%;
+}
+.demo-content .mdl-data-table th.w3{
+  width: 5%;
+}
+.demo-content .mdl-data-table th.w4{
+  width: 20%;
+}
+.demo-content .mdl-data-table td a{
+  color: rgba(0,0,0,.87);
+  text-decoration: none;
+}
+.demo-content .mdl-data-table td a:hover{
+  color: #ffab40;
+}
+.demo-content .mdl-data-table td a i{
+  vertical-align: bottom;
+}
+
 .login-box{
   position: absolute;
   top: 50%;
