@@ -87,7 +87,6 @@ router.get('/:id', function(req, res){
       case 2:
         Article.findById(id, function(err, article){
           if(err) return console.error(err);
-          console.log(article);
           res.render('back_editarticle.html', {
             optcode: 2,
             article: article

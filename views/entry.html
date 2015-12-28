@@ -27,8 +27,8 @@
     -->
 
     <link href="http://fonts.useso.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="css/material.min.css">
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="/css/material.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
     <style>
     #gotop {
       position: fixed;
@@ -43,46 +43,22 @@
   </head>
   <body>
     <div class="demo-blog demo-blog--blogpost mdl-layout mdl-js-layout has-drawer is-upgraded">
-      <header class="mdl-layout__header">
-        <div class="mdl-layout-icon"></div>
-        <div class="mdl-layout__header-row">
-          <span class="mdl-layout-title">虐猫狂人薛定谔</span>
-          <div class="mdl-layout-spacer"></div>
-          <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable
-                  mdl-textfield--floating-label mdl-textfield--align-right">
-            <label class="mdl-button mdl-js-button mdl-button--icon"
-                   for="waterfall-exp">
-              <i class="material-icons">search</i>
-            </label>
-            <div class="mdl-textfield__expandable-holder">
-              <input class="mdl-textfield__input" type="text" name="sample"
-                     id="waterfall-exp">
-            </div>
-          </div>
-        </div>
-      </header>
-      <div class="mdl-layout__drawer">
-        <span class="mdl-layout-title">虐猫狂人薛定谔</span>
-        <nav class="mdl-navigation">
-          <a href="" class="mdl-navigation__link">首页</a>
-          <a href="" class="mdl-navigation__link">关于</a>
-        </nav>
-      </div>
+      <%- include('layout/header.html') %>
       <main class="mdl-layout__content">
         <div class="demo-blog__posts mdl-grid">
           <div class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col">
             <div class="mdl-card__media mdl-color-text--grey-50">
-              <a href="" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">返回主页</a>
-              <h3>JavaScript 权威指南第六版JavaScript 权威指南第六版JavaScript 权威指南第六版JavaScript</h3>
+              <a href="/" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">返回主页</a>
+              <h3><%= article.title %></h3>
             </div>
             <div class="mdl-color-text--grey-700 mdl-card__supporting-text meta">
               <div>
-                <span>更新于2015-12-09</span>
-                <strong><i class="material-icons">&#xE866;</i> 技术</strong>
+                <span>更新于<%= article.formatTime %></span>
+                <strong><i class="material-icons">&#xE866;</i> <%= article.formatTags %></strong>
               </div>
               <div class="section-spacer"></div>
               <div class="meta__favorites" id="read">
-                425 <i id="read" class="material-icons">&#xE8F4;</i>
+                <%= article.views %> <i id="read" class="material-icons">&#xE8F4;</i>
               </div>
               <div class="mdl-tooltip mdl-tooltip" for="read">已阅读</div>
               <!-- 分享 -->
@@ -99,32 +75,7 @@
               </div>
             </div>
             <div class="mdl-color-text--grey-700 mdl-card__supporting-text article">
-              <p>Grunt 最重要的就是 package.json 和 Gruntfile.js，首先需要在项目的根目录创建package.json 和 Gruntfile.js 文件，当然也可以通过命令 <a href="https://github.com/gruntjs/grunt-init-gruntfile">grunt-init</a> 来创建，更多详情起跳转到 GitHub 。</p>
-
-<h4>package.json 的创建</h4>
-
-<p>在终端项目的根目录下输入： <code>npm init</code> 根据提示一步一步的来，即可创建完成。
-<strong>pacage.json 例子：</strong></p>
-
-<pre><code>{
-  "name": "project-one",
-  "version": "0.0.1",
-  "author": "zhangshuhui",
-  "devDependencies": {
-    "grunt": "^0.4.5",
-    "grunt-contrib-uglify": "^0.9.1"
-  }
-}
-</code></pre>
-通过 <code>npm init</code> 生成的 pacage.json 中还有一些其它字段，不过可以精简掉。更多参数请查看<a href="https://docs.npmjs.com/files/package.json">官方文档</a>。</p>
-
-<h4>Gruntfile.js 的创建</h4>
-
-<p>Gruntfile.js 需要用户自己创建文件，如果想通过终端生成，则需要简单的配置，具体详情查看 <a href="https://github.com/gruntjs/grunt-init-gruntfile">grunt-init</a> 。
-<strong>Gruntfile.js 例子</strong>
-<code></code>` javascript
-//Wrapper函数
-module.exports = function(grunt) {</p>
+              <%- article.content %>
             </div>
             <!-- 留言区 -->
             <div class="mdl-card__supporting-text comments">
@@ -147,26 +98,11 @@ module.exports = function(grunt) {</p>
             </div>
           </div>
         </div>
-        <footer class="mdl-mini-footer">
-          <div class="mdl-mini-footer__left-section">
-            <div>© 2015 <a href="">虐猫狂人薛定谔</a></div>
-            <div>Theme from <a href="http://www.getmdl.io/" target="_blank">Material Design Lite</a></div>
-          </div>
-          <div class="mdl-mini-footer__right-section">
-            <button id="github_btn" class="mdl-mini-footer--social-btn social-btn social-btn__github">
-              <span class="visuallyhidden">github</span>
-            </button>
-            <div class="mdl-tooltip" for="github_btn">GitHub</div>
-            <button id="gplus_btn" class="mdl-mini-footer--social-btn social-btn social-btn__gplus">
-              <span class="visuallyhidden">Google Plus</span>
-            </button>
-            <div class="mdl-tooltip" for="gplus_btn">G+</div>
-          </div>
-        </footer>
+        <%- include('layout/footer.html') %>
       </main>
       <div class="mdl-layout__obfuscator"></div>
     </div>
     <a href="" id="gotop" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">&#xE316;</i></a>
-    <script src="js/material.min.js"></script>
+    <script src="/js/material.min.js"></script>
   </body>
 </html>

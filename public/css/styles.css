@@ -608,30 +608,45 @@ body .demo-blog {
   text-decoration: none;
 }
 
+.demo-blog .sidebar{
+  margin-top: 16px;
+}
 .demo-blog .side-card{
   width: 100%;
   background: #fff;
+  margin-top: 20px;
 }
-.demo-blog .side-card>.mdl-card__title{
+.demo-blog .side-card:first-child{
+  margin-top: 0;
+}
+.demo-blog .side-card>h4{
   /* background: #009688; */
+  height: 33px;
+  line-height: 33px;
   color: #666;
-}
-.demo-blog .side-card>.mdl-card__title>h4{
   font-family: 'Helvetica', 'Arial', '微软雅黑', 'Microsoft YaHei', sans-serif;
+  padding: 16px;
+  margin: 0;
 }
-.demo-blog .side-card > .mdl-card__supporting-text{
-  width: auto;
-  flex-direction: column;
-  align-items: flex-start;
+.demo-blog .side-card>.text{
+  border-top: 1px solid rgba(0,0,0,.1);
+  padding: 16px;
 }
-.demo-blog .side-card > .mdl-card__supporting-text.mdl-card--border{
-  border: 1px solid rgba(0,0,0,.1);
+.demo-blog .side-card>.text>.tag{
+  display: inline-block;
+  padding: 0 5px;
+  height: 25px;
+  line-height: 25px;
+  color: #fff;
+  text-decoration: none;
+  background: #999;
+  border-radius: 2px;
+  margin: 5px 2px;
+  white-space: nowrap;
 }
-.demo-blog .side-card > .mdl-card__supporting-text > .mdl-button{
-  text-transform: none;
-  width: calc(100% - 32px);
+.demo-blog .side-card>.text>.mdl-button{
+  display: block;
   text-align: left;
-  color: #727272;
   font-family: 'Helvetica', 'Arial', '微软雅黑', 'Microsoft YaHei', sans-serif;
 }
 

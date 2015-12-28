@@ -32,6 +32,22 @@ ArticleSchema.statics.getCount = function(cb){
   });
 }
 
+//得到所有标签
+ArticleSchema.statics.getTags = function(cb){
+  this.find({}, 'tags', function(err, result){
+    if(err) return cb(err);
+    var tags = [];
+    result.forEach(function(tagArr){
+      tagArr.tags.forEach(function(tag){
+        if(tags.indexOf(tag) === -1){
+          tags.push(tag);
+        }
+      });
+    });
+    return cb(null, tags);
+  });
+}
+
 ArticleSchema.virtual('formatTime').get(function(){
   var time = moment(this.createTime).format("YYYY-MM-DD");
   return time;
