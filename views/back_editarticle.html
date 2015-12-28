@@ -114,7 +114,7 @@
 
           var data = {
             id: getId(),
-            content: content
+            content: escape(content)
           }
           $.ajax({
             url: '/ht/editarticle',

@@ -12,10 +12,39 @@ var upload = multer({
 })
 
 router.get('/', function(req, res){
-  res.render('back_login.html');
+  if(req.session.isLogin == 1){
+    res.redirect('/ht/index');
+  }else{
+    res.render('back_login.html');
+  }
+});
+
+//后台登录
+router.post('/', function(req, res){
+  var username = req.body.username;
+  var pwd = req.body.pwd;
+  if(username === '' || pwd === ''){
+    res.json({
+      status: 0,
+      msg: '用户名或密码不能为空'
+    });
+  }
+  if(username === 'admin' && pwd === 'admin'){
+    req.session.isLogin = 1;
+    res.json({
+      status: 1,
+      msg: '登录成功'
+    });
+  }else{
+    res.json({
+      status: -1,
+      msg: '用户名或密码错误'
+    });
+  }
 });
 
 //文章管理&主页设置
+router.get('/index', checkLogin);
 router.get('/index', function(req, res){
   Article.find({}).sort({ createTime: -1 })
     .limit(10).skip(0)
@@ -32,12 +61,13 @@ router.get('/index', function(req, res){
       });*/
     });
 });
-
+router.get('/newarticle', checkLogin);
 router.get('/newarticle', function(req, res){
   res.render('back_newarticle.html');
 });
 
 //文章操作
+router.get('/:id', checkLogin);
 router.get('/:id', function(req, res){
   var optcode = parseInt(req.query.optcode);
   var id = req.params.id;
@@ -129,6 +159,13 @@ router.post('/editarticle', function(req, res){
   });
 });
 
+function checkLogin(req, res, next){
+  if(req.session.isLogin == 1){
+    next();
+  }else{
+    res.redirect('/ht');
+  }
+}
 
 //上传操作
 /*router.post('/uploadImg', upload.single('imgFile'), function(req, res){

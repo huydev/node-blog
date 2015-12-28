@@ -21,8 +21,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 
 app.use(session({
-  secret: 'buxingnizhidao',
-  cookie: { secure: true }
+  secret: 'buxingnizhidao'
 }));
 
 app.use(logger('dev'));
