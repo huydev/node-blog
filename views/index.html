@@ -56,7 +56,7 @@
                 <div class="mdl-card__title mdl-color-text--grey-50">
                   <h3 class="quote"><a href="/p/<%= article._id %>"><%= article.title %></a></h3>
                 </div>
-                <div class="mdl-card__supporting-text mdl-color-text--grey-600">
+                <div class="jianjie mdl-card__supporting-text mdl-color-text--grey-600">
                   <%- article.content %>
                 </div>
                 <div class="mdl-card__actions mdl-card--border">
@@ -67,21 +67,27 @@
               </div>
             <% }) %>
             <!-- 分页 -->
-            <nav class="demo-nav mdl-cell mdl-cell--12-col">
-              <a href="entry.html" class="demo-nav__button" title="上一页">
-                <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
-                  <i class="material-icons" role="presentation">arrow_back</i>
-                </button>
-                Prev
-              </a>
-              <div class="section-spacer"></div>
-              <a href="entry.html" class="demo-nav__button" title="下一页">
-                Next
-                <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
-                  <i class="material-icons" role="presentation">arrow_forward</i>
-                </button>
-              </a>
-            </nav>
+            <% if(countPage != 1){ %>
+              <nav class="demo-nav mdl-cell mdl-cell--12-col">
+                <% if(page > 1){ %>
+                <a href="?page=<%= page-1 %>" class="demo-nav__button" title="上一页">
+                  <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+                    <i class="material-icons" role="presentation">arrow_back</i>
+                  </button>
+                  Prev
+                </a>
+                <% } %>
+                <div class="section-spacer"></div>
+                <% if(page < countPage){ %>
+                <a href="?page=<%= page+1 %>" class="demo-nav__button" title="下一页">
+                  Next
+                  <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+                    <i class="material-icons" role="presentation">arrow_forward</i>
+                  </button>
+                </a>
+                <% } %>
+              </nav>
+            <% } %>
           </div>
           <!-- right -->
           <aside class="sidebar mdl-cell mdl-cell--3-col">
@@ -93,11 +99,8 @@
             </div>
             <div class="side-card mdl-shadow--2dp">
               <h4>友情链接</h4>
-              <div class="text">
-                <a class="mdl-button mdl-js-button mdl-js-ripple-effect" href="">小路的博客</a>
-                <a class="mdl-button mdl-js-button mdl-js-ripple-effect" href="">Lovenotes</a>
-                <a class="mdl-button mdl-js-button mdl-js-ripple-effect" href="">Lovenotes</a>
-                <a class="mdl-button mdl-js-button mdl-js-ripple-effect" href="">Lovenotes</a>
+              <div class="text" id="yqlink">
+                
               </div>
             </div>
           </aside>
@@ -106,7 +109,7 @@
       </main>
       <div class="mdl-layout__obfuscator"></div>
     </div>
-    <a href="" id="gotop" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">&#xE316;</i></a>
+    <a href="javascript:;" id="gotop" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">&#xE316;</i></a>
     <script src="/js/material.min.js"></script>
     <script src="http://cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
   </body>
@@ -144,6 +147,29 @@
       });
     }
 
+    $.ajax({
+      url: '/yqlink',
+      method: 'GET',
+      dataType: 'json',
+      success: function(data){
+        console.log(data);
+        setLink(data);
+      }
+    });
+
+    //返回顶部
+    $('#gotop').on('click', function(){
+      $('html,body').animate({scrollTop: 0});
+    });
+
+    function setLink(links){
+      var allLinks = document.createDocumentFragment();
+      $.each(links, function(index, obj){
+        var newA = $('<a target="_blank" class="mdl-button mdl-js-button mdl-js-ripple-effect" href="'+ obj.url +'">'+ obj.name +'</a>')[0];
+        allLinks.appendChild(newA);
+      });
+      document.getElementById('yqlink').appendChild(allLinks);
+    }
     function setTags(tags){
       var allTags = document.createDocumentFragment();
       $.each(tags, function(index, value){

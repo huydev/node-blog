@@ -650,6 +650,17 @@ body .demo-blog {
   font-family: 'Helvetica', 'Arial', '微软雅黑', 'Microsoft YaHei', sans-serif;
 }
 
+.demo-blog .jianjie{
+  display: block;
+}
+.demo-blog .jianjie *{
+  font-size: 14px;
+  line-height: 1.5;
+  margin:0;
+  padding:0;
+  font-family: 'Helvetica', 'Arial', '微软雅黑', 'Microsoft YaHei', sans-serif;
+}
+
 /*文章样式*/
 .demo-blog--blogpost .meta + .mdl-card__supporting-text.article {
   font-size: 16px;

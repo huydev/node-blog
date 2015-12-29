@@ -3,29 +3,35 @@ var router = express.Router();
 
 var markdown = require('markdown').markdown;
 var Article = require('../entity/Article');
+var config = require('../config');
 
 router.get('/', function(req, res){
-	var page = req.query.page;
-	page = page || 1;
+	var page = req.query.page || 1;
+  var limit = config.limit;
+  Article.getCount(function(err, count){
+    if(err) console.err(err);
 
-	Article.find({}).sort({ createTime: -1 })
-    .limit(10).skip( (page-1)*10 )
-    .exec(function(err, articles){
-    	if(err) return console.err(err);
-
-    	var smallArticles = [];
-    	articles.forEach(function(article){
-    		smallArticles.push({
-    			_id: article._id,
-    			title: article.title,
-    			content: markdown.toHTML(contentHandler(article.content)),
-    			formatTime: article.formatTime
-    		});
-    	});
-    	res.render('index', {
-    		articles: smallArticles
-    	});
-    });
+  	Article.find({}).sort({ createTime: -1 })
+      .limit(limit).skip( (page-1)*limit )
+      .exec(function(err, articles){
+      	if(err) return console.err(err);
+      	var smallArticles = [];
+      	articles.forEach(function(article){
+      		smallArticles.push({
+      			_id: article._id,
+      			title: article.title,
+      			content: markdown.toHTML(contentHandler(article.content)),
+      			formatTime: article.formatTime
+      		});
+      	});
+      	res.render('index', {
+      		articles: smallArticles,
+          countPage: Math.ceil(count / limit),
+          page: parseInt(page),
+          limit: limit
+      	});
+      });
+  });
 });
 router.get('/p/:id', function(req, res){
   var id = req.params.id;
@@ -55,6 +61,11 @@ router.get('/tags', function(req, res){
 			tags: result
 		})
 	});
+});
+
+//友情链接
+router.get('/yqlink', function(req, res){
+  res.json(config.yqlinks);
 });
 
 function contentHandler(content){
