@@ -3,22 +3,22 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="description" content="A front-end template that helps you build fast, modern mobile web apps.">
+    <meta name="description" content="一个基于 Node.js 搭建的个人博客。">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>文章页</title>
+    <title><%= article.title %> - 虐猫狂人薛定谔</title>
 
     <!-- Add to homescreen for Chrome on Android -->
     <meta name="mobile-web-app-capable" content="yes">
-    <link rel="icon" sizes="192x192" href="images/touch/chrome-touch-icon-192x192.png">
+    <link rel="icon" sizes="192x192" href="/images/android-desktop.jpg">
 
     <!-- Add to homescreen for Safari on iOS -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="apple-mobile-web-app-title" content="Material Design Lite">
-    <link rel="apple-touch-icon-precomposed" href="apple-touch-icon-precomposed.png">
+    <meta name="apple-mobile-web-app-title" content="虐猫狂人薛定谔">
+    <link rel="apple-touch-icon-precomposed" href="/images/ios-desktop.jpg">
 
     <!-- Tile icon for Win8 (144x144 + tile color) -->
-    <meta name="msapplication-TileImage" content="images/touch/ms-touch-icon-144x144-precomposed.png">
+    <meta name="msapplication-TileImage" content="/images/ms-touch-icon-144x144-precomposed.jpg">
     <meta name="msapplication-TileColor" content="#3372DF">
 
     <!-- SEO: If your mobile URL is different from the desktop URL, add a canonical link to the desktop page https://developers.google.com/webmasters/smartphone-sites/feature-phones -->
@@ -26,7 +26,7 @@
     <link rel="canonical" href="http://www.example.com/">
     -->
 
-    <link href="http://fonts.useso.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="http://fonts.css.network/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="/css/material.min.css">
     <link rel="stylesheet" href="/css/styles.css">
     <style>
@@ -34,7 +34,7 @@
       position: fixed;
       display: block;
       right: 0;
-      bottom: 0;
+      bottom: 50px;
       margin-right: 40px;
       margin-bottom: 40px;
       z-index: 900;
@@ -52,7 +52,7 @@
               <h3><%= article.title %></h3>
             </div>
             <div class="mdl-color-text--grey-700 mdl-card__supporting-text meta">
-              <div>
+              <div class="time-and-tags">
                 <span>更新于<%= article.formatTime %></span>
                 <strong><i class="material-icons">&#xE866;</i> <%= article.formatTags %></strong>
               </div>
@@ -67,10 +67,8 @@
                   <i class="material-icons">share</i>
                 </button>
                 <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"for="share">
-                  <li class="mdl-menu__item">QQ空间</li>
-                  <li class="mdl-menu__item">微信</li>
-                  <li disabled class="mdl-menu__item">Disabled Action</li>
-                  <li class="mdl-menu__item">Yet Another Action</li>
+                  <li class="mdl-menu__item" id="qzone" data-title="<%= article.title %>">QQ空间</li>
+                  <li class="mdl-menu__item" id="weibo" data-title="<%= article.title %>">微博</li>
                 </ul>
               </div>
             </div>
@@ -78,23 +76,38 @@
               <%- article.content %>
             </div>
             <!-- 留言区 -->
-            <div class="mdl-card__supporting-text comments">
-              <!-- 多说评论框 start -->
-              <div class="ds-thread" data-thread-key="0001" data-title="请替换成文章的标题" data-url="请替换成文章的网址"></div>
-              <!-- 多说评论框 end -->
-              <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-              <script type="text/javascript">
-              var duoshuoQuery = {short_name:"huydev"};
-                (function() {
-                  var ds = document.createElement('script');
-                  ds.type = 'text/javascript';ds.async = true;
-                  ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-                  ds.charset = 'UTF-8';
-                  (document.getElementsByTagName('head')[0] 
-                   || document.getElementsByTagName('body')[0]).appendChild(ds);
-                })();
-              </script>
-            <!-- 多说公共JS代码 end -->
+            <div class="mdl-color-text--primary-contrast mdl-card__supporting-text comments">
+              <form id="commentForm">
+                <div class="mdl-textfield mdl-js-textfield">
+                  <input class="mdl-textfield__input" type="text" name="nick" id="nick" placeholder="昵称">
+                  <label class="mdl-textfield__label" for="nick">昵称</label>
+                </div>
+                <div class="mdl-textfield mdl-js-textfield">
+                  <input class="mdl-textfield__input" type="text" name="website" id="website" placeholder="网站">
+                  <label class="mdl-textfield__label" for="website">网站</label>
+                </div>
+                <div class="con mdl-textfield mdl-js-textfield">
+                  <input class="mdl-textfield__input" type="text" name="con" id="con" placeholder="内容">
+                  <label class="mdl-textfield__label" for="con">内容</label>
+                </div>
+                <p class="comment-tip"></p>
+                <button type="submit" id="commentSubmit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">评论</button>
+              </form>
+              <div class="comment-box">
+                <% article.comments.forEach(function(comment){ %>
+                  <div class="comment mdl-color-text--grey-700">
+                    <header class="comment__header">
+                      <div class="comment__author">
+                        <a href="<%= comment.website %>" target="_blank"><%= comment.nick %></a>
+                        <span><%= comment.formatTime %></span>
+                      </div>
+                    </header>
+                    <div class="comment__text">
+                      <%- comment.content %>
+                    </div>
+                  </div>
+                <% }) %>
+              </div>
             </div>
           </div>
         </div>
@@ -104,13 +117,112 @@
     </div>
     <a href="javascript:;" id="gotop" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">&#xE316;</i></a>
     <script src="/js/material.min.js"></script>
+    <script src="/js/xss.js"></script>
     <script src="http://cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
     <script>
     $(function(){
       //返回顶部
       $('#gotop').on('click', function(){
-        console.log('123');
-        $('body,html').animate({scrollTop:0},1000);
+        $('main.mdl-layout__content').animate({scrollTop: 0});
+      });
+
+      function getDate(date){
+        var year = date.getFullYear(),
+            month = date.getMonth(),
+            day = date.getDate(),
+            hours = date.getHours(),
+            minutes = date.getMinutes(),
+            seconds = date.getSeconds();
+        return year + '-' + twonumber(month+1) + '-' + twonumber(day) + ' ' + twonumber(hours) + ':' +
+          twonumber(minutes) + ':' + twonumber(seconds);
+      }
+      function twonumber(value){
+        return value < 10 ? '0' + value : value;
+      }
+
+      function getId(){
+        return location.pathname.replace('/p/', '');
+      }
+
+      //分享相关
+      $('#qzone').on('click', function(){
+        var title = $(this).data('title');
+        var opt = {
+          url: location.href,
+          title: title,
+          desc: '',
+          summary:'',
+          site:'',
+          pics:''
+        };
+        var query = [];
+        for(var i in opt){
+          query.push(i + '=' + encodeURIComponent(opt[i]||''));
+        }
+        var href = 'http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?' + query.join('&');
+        window.open(href);
+      });
+      $('#weibo').on('click', function(){
+        var title = $(this).data('title');
+        var opt = {
+          url: location.href,
+          title: title,
+          appkey: 3581453612,
+          pic:'',
+          sudaref: 'http://open.weibo.com/sharebutton'
+        };
+        var query = [];
+        for(var i in opt){
+          query.push(i + '=' + encodeURIComponent(opt[i]||''));
+        }
+        var href = 'http://service.weibo.com/share/share.php?' + query.join('&');
+        window.open(href);
+      });
+
+      $("#commentForm").on('submit', function(){
+        $('#commentSubmit').prop('disabled', true);
+        var _this = this;
+
+        var con = $("#con").val();
+        if($.trim(con) == ''){
+          console.log('123');
+          $('.comment-tip').text('评论内容不能为空。');
+          $('#commentSubmit').prop('disabled', false);
+          return false;
+        }
+        var data = $(this).serialize() + '&id=' + getId();
+        $.ajax({
+          url: '/addComment',
+          method: 'POST',
+          dataType: 'json',
+          data: data,
+          success: function(data){
+            if(data.status == 0){
+              $('.comment-tip').text(data.msg);
+              $('#commentSubmit').prop('disabled', false);
+            }
+            if(data.status == 1){
+              var comment = {
+                nick: filterXSS($('#nick').val()) || '匿名人士',
+                website: filterXSS($('#website').val()) || 'javascript:;',
+                content: filterXSS($('#con').val()),
+                time: getDate(new Date())
+              }
+              var str = '<div class="comment mdl-color-text--grey-700"><header class="comment__header"><div class="comment__author"><a href="'+ comment.website +'" target="_blank">'+ comment.nick +'</a><span>'+ comment.time +'</span></div></header><div class="comment__text">'+ comment.content +'</div></div>'
+              $('.comment-box').prepend(str);
+              
+              $(_this)[0].reset();
+              $(_this).find('.mdl-textfield').each(function(index, elem){
+                componentHandler.upgradeElement(this);
+              });
+              $('#commentSubmit').prop('disabled', false);
+            }
+          },
+          error: function(){
+            console.log('评论系统错误');
+          }
+        });
+        return false;
       });
     });
     </script>

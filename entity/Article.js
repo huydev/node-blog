@@ -2,11 +2,14 @@ var mongoose = require('./db');
 
 var moment = require('moment');
 
+var config = require('../config.js');
+
 var CommentSchema = mongoose.Schema({
   nick: String,
   email: String,
   website: String,
   content: String,
+  ip: String,
   createTime: Date
 });
 
@@ -48,13 +51,24 @@ ArticleSchema.statics.getTags = function(cb){
   });
 }
 
+//搜索
+ArticleSchema.statics.search = function(key, page, cb){
+  var pattern = new RegExp(key, "i");
+  this.find({title: pattern}, 'title createTime').sort({ createTime: -1 })
+    .limit(config.qlimit).skip( (page-1)*config.qlimit )
+    .exec(function(err, articles){
+      if(err) return cb(err);
+      return cb(null, articles);
+    });
+}
+
 ArticleSchema.virtual('formatTime').get(function(){
   var time = moment(this.createTime).format("YYYY-MM-DD");
   return time;
 });
 
 ArticleSchema.virtual('formatTags').get(function(){
-  var newTags = this.tags.join(';');
+  var newTags = this.tags.join(' ');
   return newTags;
 });
 

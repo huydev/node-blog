@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>后台管理-留言管理</title>
+
+    <!-- Add to homescreen for Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="icon" sizes="192x192" href="images/android-desktop.png">
+
+    <!-- Add to homescreen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Material Design Lite">
+    <link rel="apple-touch-icon-precomposed" href="images/ios-desktop.png">
+
+    <!-- Tile icon for Win8 (144x144 + tile color) -->
+    <meta name="msapplication-TileImage" content="images/touch/ms-touch-icon-144x144-precomposed.png">
+    <meta name="msapplication-TileColor" content="#3372DF">
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+    <!-- SEO: If your mobile URL is different from the desktop URL, add a canonical link to the desktop page https://developers.google.com/webmasters/smartphone-sites/feature-phones -->
+    <!--
+    <link rel="canonical" href="http://www.example.com/">
+    -->
+
+    <link href="http://fonts.useso.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="/css/material.min.css">
+    <link rel="stylesheet" href="/css/backstyles.css">
+  </head>
+  <body>
+    <div class="demo-layout mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header">
+      <%- include('layout/back_header.html') %>
+      <main class="mdl-layout__content mdl-color--grey-100">
+        <div class="mdl-grid demo-content">
+          <div class="mdl-cell mdl-cell--12-col">
+            <table class="comment-table mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp">
+              <thead>
+                <tr>
+                  <th class="mdl-data-table__cell--non-numeric w1">留言姓名</th>
+                  <th class="w2">网址</th>
+                  <th class="wip">IP</th>
+                  <th class="w3">内容</th>
+                  <th class="w4">时间</th>
+                  <th class="w5">操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% article.comments.forEach(function(comment){ %>
+                  <tr>
+                    <td class="mdl-data-table__cell--non-numeric"><%= comment.nick %></td>
+                    <td><%= comment.website %></td>
+                    <td><%= comment.ip %></td>
+                    <td><%= comment.content %></td>
+                    <td><%= comment.formatTime %></td>
+                    <td>
+                      <a href="/ht/comment/delete/<%= article._id %>?commentId=<%= comment._id %>" class="delete"><i class="material-icons">clear</i> 删除</a>
+                    </td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+            <a href="/ht/comment/deleteAll/<%= article._id %>" class="mdl-button mdl-js-button mdl-button--raised" id="deleteAll" style="margin-top:20px;">
+              删除所有
+            </a>
+          </div>
+        </div>
+      </main>
+    </div>
+    <script src="/js/material.min.js"></script>
+    <script src="http://cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
+    <script>
+    $(function(){
+      $('a.delete').on('click', function(){
+        var url = $(this).attr('href');
+        $.ajax({
+          url: url,
+          method: 'GET',
+          dataType: 'json',
+          success: function(data){
+            if(data.status == 1){
+              alert(data.msg);
+              location.reload();
+            }else{
+              alert('删除失败，Error: ' + data.msg);
+            }
+          }
+        });
+        return false;
+      });
+      //删除所有留言
+      $('#deleteAll').on('click', function(e){
+        e.preventDefault();
+        var r = confirm('确定删除全部？');
+        if(r == true){
+          var url = $(this).attr('href');
+          $.ajax({
+            url: url,
+            method: 'GET',
+            dataType: 'json',
+            success: function(data){
+              alert(data.msg);
+            }
+          });
+        }
+        return false;
+      });
+    })
+    </script>
+  </body>
+</html>

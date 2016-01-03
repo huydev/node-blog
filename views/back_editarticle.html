@@ -4,21 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>后台管理</title>
-
-    <!-- Add to homescreen for Chrome on Android -->
-    <meta name="mobile-web-app-capable" content="yes">
-    <link rel="icon" sizes="192x192" href="images/android-desktop.png">
-
-    <!-- Add to homescreen for Safari on iOS -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="apple-mobile-web-app-title" content="Material Design Lite">
-    <link rel="apple-touch-icon-precomposed" href="images/ios-desktop.png">
-
-    <!-- Tile icon for Win8 (144x144 + tile color) -->
-    <meta name="msapplication-TileImage" content="images/touch/ms-touch-icon-144x144-precomposed.png">
-    <meta name="msapplication-TileColor" content="#3372DF">
+    <title>博客后台管理系统 - 虐猫狂人薛定谔</title>
 
     <link rel="shortcut icon" href="/favicon.png">
 
@@ -27,14 +13,13 @@
     <link rel="canonical" href="http://www.example.com/">
     -->
 
-    <link href="http://fonts.useso.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="http://fonts.css.network/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="/css/material.min.css">
     <link rel="stylesheet" href="/css/backstyles.css">
     <!-- markdown -->
     <link rel="stylesheet" href="/css/editor.css" />
     <script type="text/javascript" src="/js/editor.js"></script>
     <script type="text/javascript" src="/js/marked.js"></script>
-
   </head>
   <body>
     <div class="demo-layout mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header">
@@ -57,10 +42,10 @@
                 <% }else if(optcode == 2){ %>
                   <input class="mdl-textfield__input" type="text" id="tags" value="<%= article.tags %>" readonly>
                 <% } %>
-                <label class="mdl-textfield__label" for="tags">标签(使用 ; 分隔)</label>
+                <label class="mdl-textfield__label" for="tags">标签(使用空格“ ”分隔)</label>
               </div>
               <div class="content-form">
-                <label for="content">内容</label>
+                <label for="content">内容(使用 &lt!-- more --&gt 标记简介)</label>
                 <textarea type="text" rows= "3" id="content" ></textarea>
               </div>
               <p id="result" class="mdl-color-text--grey"></p>

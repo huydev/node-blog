@@ -4,21 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>后台管理</title>
-
-    <!-- Add to homescreen for Chrome on Android -->
-    <meta name="mobile-web-app-capable" content="yes">
-    <link rel="icon" sizes="192x192" href="images/android-desktop.png">
-
-    <!-- Add to homescreen for Safari on iOS -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="apple-mobile-web-app-title" content="Material Design Lite">
-    <link rel="apple-touch-icon-precomposed" href="images/ios-desktop.png">
-
-    <!-- Tile icon for Win8 (144x144 + tile color) -->
-    <meta name="msapplication-TileImage" content="images/touch/ms-touch-icon-144x144-precomposed.png">
-    <meta name="msapplication-TileColor" content="#3372DF">
+    <title>博客后台管理系统 - 虐猫狂人薛定谔</title>
 
     <link rel="shortcut icon" href="/favicon.png">
 
@@ -27,20 +13,9 @@
     <link rel="canonical" href="http://www.example.com/">
     -->
 
-    <link href="http://fonts.useso.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="http://fonts.css.network/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="/css/material.min.css">
     <link rel="stylesheet" href="/css/backstyles.css">
-    <style>
-    #view-source {
-      position: fixed;
-      display: block;
-      right: 0;
-      bottom: 0;
-      margin-right: 40px;
-      margin-bottom: 40px;
-      z-index: 900;
-    }
-    </style>
   </head>
   <body>
     <div class="demo-layout mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header">
@@ -53,8 +28,9 @@
                 <tr>
                   <th class="mdl-data-table__cell--non-numeric w1">标题</th>
                   <th class="w2">时间</th>
-                  <th class="w3">阅读量</th>
-                  <th class="w4">操作</th>
+                  <th class="w3">留言数</th>
+                  <th class="w4">阅读量</th>
+                  <th class="w5">操作</th>
                 </tr>
               </thead>
               <tbody>
@@ -62,17 +38,26 @@
                   <tr>
                     <td class="mdl-data-table__cell--non-numeric"><%= article.title %></td>
                     <td><%= article.formatTime %></td>
+                    <td><a class="commentNum" href="/ht/comment/<%= article._id %>"><%= article.comments.length %></a></td>
                     <td><%= article.views %></td>
                     <td>
-                      <a href="/ht/<%= article._id %>?optcode=1"><i class="material-icons">visibility</i> 预览</a>
-                      <a href="/ht/<%= article._id %>?optcode=2"><i class="material-icons">mode_edit</i> 编辑</a>
-                      <a href="/ht/<%= article._id %>?optcode=3" class="delete"><i class="material-icons">clear</i> 删除</a>
+                      <a href="/ht/p/<%= article._id %>?optcode=1"><i class="material-icons">visibility</i> 预览</a>
+                      <a href="/ht/p/<%= article._id %>?optcode=2"><i class="material-icons">mode_edit</i> 编辑</a>
+                      <a href="/ht/p/<%= article._id %>?optcode=3" class="delete"><i class="material-icons">clear</i> 删除</a>
                     </td>
                   </tr>
                 <% }) %>
               </tbody>
             </table>
-            <p><%=total%></p>
+            <div class="pagation-nav">
+              <% if(page > 1){ %>
+              <a href="/ht/index?page=<%= page-1 %>">上一页</a>
+              <% } %>
+              <% if(page < countPage){ %>
+              <a href="/ht/index?page=<%= page+1 %>">下一页</a>
+              <% } %>
+              <span>总页数：<%= countPage %></span>
+            </div>
           </div>
         </div>
       </main>
@@ -97,6 +82,13 @@
           }
         });
         return false;
+      });
+
+      $('a.commentNum').on('click', function(e){
+        var num = $(this).text();
+        if(num == 0){
+          e.preventDefault();
+        }
       });
     })
     </script>

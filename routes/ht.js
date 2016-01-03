@@ -3,6 +3,7 @@ var router = express.Router();
 var fs = require('fs');
 
 var Article = require('../entity/Article');
+var config = require('../config');
 
 var multer = require('multer');  //文件上传
 var upload = multer({
@@ -43,16 +44,30 @@ router.post('/', function(req, res){
   }
 });
 
+//退出登录
+router.get('/exit', function(req, res){
+  req.session.destroy(function(err){
+    if(err) return console.error(err);
+    res.redirect('/ht');
+  });
+});
+
 //文章管理&主页设置
 router.get('/index', checkLogin);
 router.get('/index', function(req, res){
+  var page = parseInt(req.query.page || 1);
+  console.log(page);
+  var limit = config.back_limit;
+
   Article.find({}).sort({ createTime: -1 })
-    .limit(10).skip(0)
+    .limit(limit).skip((page-1) * limit)
     .exec(function(err, articles){
       Article.getCount(function(err, count){
         res.render('back_index.html', {
+          page_title: '主页设置',
           articles: articles,
-          total: count
+          page: page,
+          countPage: Math.ceil(count / limit)
         });
       });
       /*res.render('back_index.html', {
@@ -63,12 +78,61 @@ router.get('/index', function(req, res){
 });
 router.get('/newarticle', checkLogin);
 router.get('/newarticle', function(req, res){
-  res.render('back_newarticle.html');
+  res.render('back_newarticle.html', {
+    page_title: '新增文章'
+  });
 });
 
-//文章操作
-router.get('/:id', checkLogin);
-router.get('/:id', function(req, res){
+//留言管理
+router.get('/comment/:id', checkLogin);
+router.get('/comment/:id', function(req, res){
+  var id = req.params.id;
+  Article.findById(id, 'comments', function(err, article){
+    if(err) return console.error(err);
+    res.render('back_comment.html', {
+      page_title: '评论管理',
+      article: article
+    });
+  });
+});
+router.get('/comment/:id', checkLogin);
+router.get('/comment/delete/:id', function(req, res){
+  var id = req.params.id;
+  var commentId = req.query.commentId;
+  Article.findByIdAndUpdate(id, {$pull: {comments: {_id: commentId}}}, function(err, article){
+    if(err){
+      console.error(err);
+      return res.json({
+        status: -1,
+        msg: '错误' + err
+      });
+    }
+    res.json({
+      status: 1,
+      msg: '删除成功'
+    });
+  });
+});
+router.get('/comment/deleteAll/:id', function(req, res){
+  var id = req.params.id;
+  Article.findByIdAndUpdate(id, {$set: {comments: []}}, function(err, article){
+    if(err){
+      console.error(err);
+      return res.json({
+        status: -1,
+        msg: '错误' + err
+      });
+    }
+    res.json({
+      status: 1,
+      msg: '删除所有成功'
+    });
+  });
+});
+
+//文章操作(/:id 会匹配 /comment 需要修改)
+router.get('/p/:id', checkLogin);
+router.get('/p/:id', function(req, res){
   var optcode = parseInt(req.query.optcode);
   var id = req.params.id;
 
@@ -79,6 +143,7 @@ router.get('/:id', function(req, res){
           if(err) return console.error(err);
           console.log(article);
           res.render('back_editarticle.html', {
+            page_title: '文章预览',
             optcode: 1,
             article: article
           });
@@ -88,6 +153,7 @@ router.get('/:id', function(req, res){
         Article.findById(id, function(err, article){
           if(err) return console.error(err);
           res.render('back_editarticle.html', {
+            page_title: '文章编辑',
             optcode: 2,
             article: article
           });
@@ -114,7 +180,6 @@ router.get('/:id', function(req, res){
     }
   }
 });
-
 //新建文章
 router.post('/addarticle', function(req, res){
   Article.create({

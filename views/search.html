@@ -50,22 +50,20 @@
         <div class="demo-blog__posts mdl-grid">
           <!-- left -->
           <div class="mdl-cell mdl-cell--9-col">
-            <!-- 文章 -->
-            <% articles.forEach(function(article){ %>
-              <div class="mdl-card amazing mdl-cell mdl-cell--12-col mdl-shadow--2dp">
-                <div class="mdl-card__title mdl-color-text--grey-50">
-                  <h3 class="quote"><a href="/p/<%= article._id %>"><%= article.title %></a></h3>
-                </div>
-                <div class="jianjie article mdl-card__supporting-text mdl-color-text--grey-600">
-                  <%- article.content %>
-                </div>
-                <div class="mdl-card__actions mdl-card--border">
-                  <a href="/p/<%= article._id %>" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">阅读更多</a>
-                  <div class="mdl-layout-spacer"></div>
-                  <span class="date"><%= article.formatTime %></span>
-                </div>
+            <div class="custom-card mdl-shadow--2dp">
+              <% if(articles.length == 0){ %>
+              <div class="custom-item">
+                <span class="custom-title">没有相关文章</span>
               </div>
-            <% }) %>
+              <% }else{ %>
+                <% articles.forEach(function(article){ %>
+                  <div class="custom-item">
+                    <a href="/p/<%= article._id %>" class="custom-title"><%= article.title %></a>
+                    <div class="custom-time"><%= article.formatTime %></div>
+                  </div>
+                <% }) %>
+              <% } %>
+            </div>
             <!-- 分页 -->
             <% if(countPage != 1){ %>
               <nav class="demo-nav mdl-cell mdl-cell--12-col">
@@ -112,74 +110,58 @@
     <a href="javascript:;" id="gotop" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">&#xE316;</i></a>
     <script src="/js/material.min.js"></script>
     <script src="http://cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
-  </body>
-  <script>
-    Array.prototype.forEach.call(document.querySelectorAll('.mdl-card__media'), function(el) {
-      var link = el.querySelector('a');
-      if(!link) {
-        return;
-      }
-      var target = link.getAttribute('href');
-      if(!target) {
-        return;
-      }
-      el.addEventListener('click', function() {
-        location.href = target;
+    <script>
+    $(function(){
+      //返回顶部
+      $('#gotop').on('click', function(){
+        $('main.mdl-layout__content').animate({scrollTop: 0});
       });
-    });
-  </script>
-  <script>
-  $(function(){
-    if(sessionStorage.tags){
-      setTags(JSON.parse(sessionStorage.tags));
-    }else{
+      
+      if(sessionStorage.tags){
+        setTags(JSON.parse(sessionStorage.tags));
+      }else{
+        $.ajax({
+          url: '/tags',
+          method: 'GET',
+          dataType: 'json',
+          success: function(data){
+            sessionStorage.tags = JSON.stringify(data.tags);
+            setTags(data.tags);
+          },
+          error: function(){
+            console.log('获取标签，系统错误');
+          }
+        });
+      }
+
       $.ajax({
-        url: '/tags',
+        url: '/yqlink',
         method: 'GET',
         dataType: 'json',
         success: function(data){
-          sessionStorage.tags = JSON.stringify(data.tags);
-          setTags(data.tags);
-        },
-        error: function(){
-          console.log('获取标签，系统错误');
+          console.log(data);
+          setLink(data);
         }
       });
-    }
-
-    $.ajax({
-      url: '/yqlink',
-      method: 'GET',
-      dataType: 'json',
-      success: function(data){
-        console.log(data);
-        setLink(data);
+      function setLink(links){
+        var allLinks = document.createDocumentFragment();
+        $.each(links, function(index, obj){
+          var newA = $('<a target="_blank" class="mdl-button mdl-js-button mdl-js-ripple-effect" href="'+ obj.url +'">'+ obj.name +'</a>')[0];
+          allLinks.appendChild(newA);
+        });
+        document.getElementById('yqlink').appendChild(allLinks);
+      }
+      function setTags(tags){
+        var allTags = document.createDocumentFragment();
+        $.each(tags, function(index, value){
+          var randomColor = 'hsl('+ Math.round(255 * Math.random()) +', 46%, 42%)';
+          var newA = $('<a href="javascript:;" class="tag">'+ value +'</a>')[0];
+          newA.style.backgroundColor = randomColor;
+          allTags.appendChild(newA);
+        });
+        document.getElementById('tags').appendChild(allTags);
       }
     });
-
-    //返回顶部
-    $('#gotop').on('click', function(){
-      $('main.mdl-layout__content').animate({scrollTop: 0});
-    });
-
-    function setLink(links){
-      var allLinks = document.createDocumentFragment();
-      $.each(links, function(index, obj){
-        var newA = $('<a target="_blank" class="mdl-button mdl-js-button mdl-js-ripple-effect" href="'+ obj.url +'">'+ obj.name +'</a>')[0];
-        allLinks.appendChild(newA);
-      });
-      document.getElementById('yqlink').appendChild(allLinks);
-    }
-    function setTags(tags){
-      var allTags = document.createDocumentFragment();
-      $.each(tags, function(index, value){
-        var randomColor = 'hsl('+ Math.round(255 * Math.random()) +', 46%, 42%)';
-        var newA = $('<a href="javascript:;" class="tag">'+ value +'</a>')[0];
-        newA.style.backgroundColor = randomColor;
-        allTags.appendChild(newA);
-      });
-      document.getElementById('tags').appendChild(allTags);
-    }
-  });
-  </script>
+    </script>
+  </body>
 </html>

@@ -1,6 +1,6 @@
 <header class="demo-header mdl-layout__header mdl-color--grey-100 mdl-color-text--grey-600">
   <div class="mdl-layout__header-row">
-    <span class="mdl-layout-title">主页设置</span>
+    <span class="mdl-layout-title"><%= page_title %></span>
     <div class="mdl-layout-spacer"></div>
     <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable">
       <label class="mdl-button mdl-js-button mdl-button--icon" for="search">
@@ -26,6 +26,10 @@
     <img src="/images/user.jpg" class="demo-avatar">
     <div class="demo-avatar-dropdown">
       <span>系统管理员</span>
+      <div class="mdl-layout-spacer"></div>
+      <a href="/ht/exit" title="退出" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+        <i class="material-icons">power_settings_new</i>
+      </a>
     </div>
   </header>
   <nav class="demo-navigation mdl-navigation mdl-color--blue-grey-800">
