@@ -35,6 +35,12 @@ router.get('/', function(req, res){
       });
   });
 });
+
+//关于我
+router.get('/about', function(req, res){
+  res.render('about');
+});
+
 router.get('/p/:id', function(req, res){
   var id = req.params.id;
   Article.findByIdAndUpdate(id, {$inc: {views: 1}}, function(err, article){

@@ -666,6 +666,9 @@ body .demo-blog {
 .demo-blog .jianjie{
   display: block;
 }
+.demo-blog .about{
+  width: auto;
+}
 
 .demo-blog .custom-card{
   border-radius: 2px;
@@ -822,8 +825,8 @@ body .demo-blog {
   background: transparent;
   border: 0;
 }
-.article b,
-.article strong {
+.demo-blog .article b,
+.demo-blog .article strong {
   font-weight: bold;
 }
 .article dfn {

@@ -30,7 +30,7 @@ router.post('/', function(req, res){
       msg: '用户名或密码不能为空'
     });
   }
-  if(username === 'admin' && pwd === 'admin'){
+  if(username === config.username && pwd === config.pwd){
     req.session.isLogin = 1;
     res.json({
       status: 1,

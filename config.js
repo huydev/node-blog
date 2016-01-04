@@ -1,6 +1,10 @@
 module.exports.yqlinks = [
-  {name: '待添加', url: 'javascript:;'}
+  {name: 'Lovenotes', url: 'http://lovenotes.me'}
 ];
+
+//后台登录的用户名和密码
+module.exports.username = 'admin';
+module.exports.pwd = 'admin';
 
 //每页显示文章数目
 module.exports.limit = 5;

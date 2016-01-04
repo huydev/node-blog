@@ -33,6 +33,16 @@ app.use(express.static(__dirname + '/public'));
 app.use('/', index);
 app.use('/ht', ht);
 
+// 50x
+app.use(function(err, req, res, next){
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
+});
+// 404
+app.use(function(req, res, next){
+  res.status(404).send('404 Not Find. 没有更多的信息了，自己点浏览器返回按钮返回吧 ฅ(๑˙o˙๑)ฅ');
+});
+
 var server = app.listen(3000, function(){
   var host = server.address().address;
   var port = server.address().port;
