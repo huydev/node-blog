@@ -55,7 +55,7 @@ body .demo-blog {
     color: #fff;
   }
   aside.mdl-cell--3-col{
-    width: calc(100% - 32px);
+    width: calc(100% - 16px);
   }
 }
 .demo-blog .demo-blog__posts {
@@ -625,7 +625,7 @@ body .demo-blog {
   margin-top: 16px;
 }
 .demo-blog .side-card{
-  width: 100%;
+  margin: 8px;
   background: #fff;
   margin-top: 20px;
 }
@@ -661,6 +661,7 @@ body .demo-blog {
   display: block;
   text-align: left;
   font-family: 'Helvetica', 'Arial', '微软雅黑', 'Microsoft YaHei', sans-serif;
+  text-transform: none;
 }
 
 .demo-blog .jianjie{
