@@ -44,7 +44,11 @@ router.get('/about', function(req, res){
 router.get('/p/:id', function(req, res){
   var id = req.params.id;
   Article.findByIdAndUpdate(id, {$inc: {views: 1}}, function(err, article){
-  	if(err) return console.error(err);
+  	if(err){
+      console.error(err);
+      return res.redirect('/404');
+    }
+    console.log('++++' + article._id);
   	var article = {
   		_id: article._id,
   		title: article.title,
