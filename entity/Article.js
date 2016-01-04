@@ -19,12 +19,12 @@ CommentSchema.virtual('formatTime').get(function(){
 });
 
 var ArticleSchema = mongoose.Schema({
-  title: String,
-  tags: [String],
+  title: { type: String, index: true },
+  tags: { type: [String], index: true },
   content: String,
-  comments: [CommentSchema],
+  comments: { type: [CommentSchema], index: true },
   views: {type: Number, default: 0},
-  createTime: Date
+  createTime: { type: Date, index: true }
 }, { collection: 'articles' });
 
 //数量
