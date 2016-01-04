@@ -82,7 +82,7 @@ router.post('/addComment', function(req, res){
   var nick = req.body.nick || '匿名人士';
   var website = req.body.website || 'javascript:;';
   var con = xss(req.body.con);
-  var ip = req.ip;
+  var ip = req.headers['x-real-ip'];  //通过Nginx反向代理不能通过 req.ip 获取IP
 
   var data;
   if(con == ''){
