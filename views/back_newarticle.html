@@ -67,14 +67,17 @@
 
           if($.trim(title) == ''){
             alert('标题不能为空');
+            $('#submitbtn').prop('disabled', false);
             return false;
           }
           if(tags.length == 0){
             alert('标签不能为空');
+            $('#submitbtn').prop('disabled', false);
             return false;
           }
           if($.trim(content) == ''){
             alert('内容不能为空');
+            $('#submitbtn').prop('disabled', false);
             return false;
           }
 
