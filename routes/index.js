@@ -19,6 +19,12 @@ marked.setOptions({
   smartypants: true  //优化标点符号
 });
 
+var sm = require('sitemap');
+var sitemap = sm.createSitemap({
+  hostname: 'http://huydev.com',
+  cacheTime: 600000
+});
+
 router.get('/', function(req, res){
 	var page = req.query.page || 1;
   var limit = config.limit;
@@ -147,6 +153,26 @@ router.get('/search', function(req, res){
       });
     });
   });
+});
+
+//sitemap
+router.get('/sitemap.xml', function(req, res){
+  Article.find({}, '_id', {sort: {createTime: -1}}, function(err, articles){
+    if(err) return console.error(err);
+
+    sitemap.add({ url: '/', priority: 0.7 });
+    sitemap.add({ url: '/about', priority: 0.6 });
+
+    articles.forEach(function(article){
+      sitemap.add({ url: '/p/' + article._id });
+    });
+    sitemap.toXML(function(err, xml){
+      if(err) return res.status(500).end();
+      res.header('Content-Type', 'application/xml');
+      res.send(xml);
+    });
+  });
+  
 });
 
 function contentHandler(content){
