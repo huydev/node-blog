@@ -30,6 +30,7 @@
 
     <link href="http://fonts.css.network/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="/css/material.min.css">
+    <link href="http://cdn.bootcss.com/highlight.js/9.1.0/styles/default.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/styles.css">
     <style>
     #gotop {
@@ -110,6 +111,7 @@
       <div class="mdl-layout__obfuscator"></div>
     </div>
     <a href="javascript:;" id="gotop" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">&#xE316;</i></a>
+    <script src="http://cdn.bootcss.com/highlight.js/9.1.0/highlight.min.js"></script>
     <script src="/js/material.min.js"></script>
     <script src="http://cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
   </body>
@@ -130,6 +132,9 @@
   </script>
   <script>
   $(function(){
+
+    hljs.initHighlightingOnLoad();
+
     if(sessionStorage.tags){
       setTags(JSON.parse(sessionStorage.tags));
     }else{
@@ -152,7 +157,6 @@
       method: 'GET',
       dataType: 'json',
       success: function(data){
-        console.log(data);
         setLink(data);
       }
     });

@@ -1,10 +1,23 @@
 var express = require('express');
 var router = express.Router();
 
-var markdown = require('markdown').markdown;
 var Article = require('../entity/Article');
 var config = require('../config');
 var xss = require('xss');
+var marked = require('marked');
+marked.setOptions({
+  renderer: new marked.Renderer(),
+  highlight: function(code){
+    return require('highlight.js').highlightAuto(code).value;
+  },
+  gfm: true,
+  tables: true, //支持github表格
+  breaks: true, //支持github换行
+  pedantic: false,  //只解析符合markdown.pl定义的，不修正markdown的错误
+  sanitize: false, //原始输出，忽略HTML标签
+  smartLists: true, //优化列表输出
+  smartypants: true  //优化标点符号
+});
 
 router.get('/', function(req, res){
 	var page = req.query.page || 1;
@@ -22,7 +35,7 @@ router.get('/', function(req, res){
       		smallArticles.push({
       			_id: article._id,
       			title: article.title,
-      			content: markdown.toHTML(content),
+      			content: marked(content),
       			formatTime: article.formatTime
       		});
       	});
@@ -48,12 +61,11 @@ router.get('/p/:id', function(req, res){
       console.error(err);
       return res.redirect('/404');
     }
-    console.log('++++' + article._id);
   	var article = {
   		_id: article._id,
   		title: article.title,
-  		content: markdown.toHTML(unescape(article.content).replace(/<!--\s?more\s?-->/, '')),
-  		formatTime: article.formatTime,
+  		content: marked(unescape(article.content).replace(/<!--\s?more\s?-->/, '')),
+      formatTime: article.formatTime,
   		views: article.views,
   		tags: article.tags,
   		formatTags: article.formatTags,
