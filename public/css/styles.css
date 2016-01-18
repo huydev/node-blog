@@ -807,7 +807,7 @@ body .demo-blog {
   border-radius: 2px;
   color: #fff;
   padding: 2px 4px;
-  white-space: nowrap;
+  white-space: normal;
 }
 .article pre {
   display: block;
