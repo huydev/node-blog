@@ -147,7 +147,7 @@
       var allTags = document.createDocumentFragment();
       $.each(tags, function(index, value){
         var randomColor = 'hsl('+ Math.round(255 * Math.random()) +', 46%, 42%)';
-        var newA = $('<a href="javascript:;" class="tag">'+ value +'</a>')[0];
+        var newA = $('<a href="/tag/'+ value +'" class="tag">'+ value +'</a>')[0];
         newA.style.backgroundColor = randomColor;
         allTags.appendChild(newA);
       });

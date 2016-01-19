@@ -155,6 +155,28 @@ router.get('/search', function(req, res){
   });
 });
 
+//点击标签
+router.get('/tag/:tagname', function(req, res){
+  var page = req.query.page || 1;
+  page = parseInt(page);
+  var limit = config.qlimit;
+
+  var tag = req.params.tagname;
+
+  Article.find({tags: tag}).count(function(err, count){
+    Article.find({tags: tag}, 'title createTime').sort({ createTime: -1 })
+      .limit(limit).skip( (page-1)*limit )
+      .exec(function(err, articles){
+        if(err) return console.error(err);
+        res.render('search', {
+          articles: articles,
+          countPage: Math.ceil(count / limit),
+          page: page
+        });
+      });
+  });
+});
+
 //sitemap
 router.get('/sitemap.xml', function(req, res){
   Article.find({}, '_id', {sort: {createTime: -1}}, function(err, articles){
