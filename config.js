@@ -1,6 +1,6 @@
 module.exports.yqlinks = [
 	{name: 'GDG ChongQing', url: 'http://www.gdgcq.org/'},
-  {name: 'Lovenotes', url: 'http://lovenotes.me'}
+  {name: 'Lovenotes', url: 'http://lovenotes.me'},
   {name: 'CodeDreamfy', url: 'http://www.todojs.cn/'}
 ];
 
